@@ -1,0 +1,75 @@
+create database store;
+
+create table countries
+(
+    code int primary key ,
+    name varchar(20) unique ,
+    continent_name varchar(20) not null
+);
+
+create table users
+(
+    id int primary key ,
+    full_name varchar(20),
+    email varchar(20),
+    gender char(1) check ( gender='M' or gender='F' ),
+    date_of_birth varchar(15),
+    country_code int,
+    foreign key (country_code) references countries(code)
+);
+
+create table orders
+(
+    id int primary key,
+    status varchar(6) check ( status = 'start' or status = 'finish' ),
+    user_id int,
+    foreign key (user_id) references users(id)
+);
+
+
+create table  products
+(
+     id  int primary key,
+     name varchar(10) not null,
+     price int default 0,
+     status varchar(10) check ( status = 'valid' or status = 'expired' )
+);
+
+create table order_products
+(
+    order_id int ,
+    product_id int ,
+    quantity int default 0,
+    primary key (order_id, product_id),
+    foreign key (order_id) references orders(id),
+    foreign key (product_id) references products(id)
+);
+
+alter table  users add column created_at datetime default current_timestamp;
+alter table  orders add column created_at datetime default current_timestamp;
+alter table  products add column created_at datetime default current_timestamp;
+
+
+
+insert into countries values (2, 'jedd', 'Saudi Arabia');
+
+insert into users values (2, 'Naw','n@hotmail.com','M','13/07/1995', 212,current_timestamp);
+
+insert into orders values (2,'start',12,CURRENT_TIMESTAMP );
+
+insert into products values (1, 'Galaxy', 2000, 'valid', CURRENT_TIMESTAMP);
+insert into products values (2, 'Phone', 4000, 'valid', CURRENT_TIMESTAMP);
+
+insert into order_products values (2,2,2);
+
+update countries set code=3, name= 'Dubai', continent_name= 'Emaraties'
+where code=2;
+
+delete from products where id=2;
+
+
+select * from countries;
+select * from products;
+select * from users;
+select * from orders;
+select * from order_products;
